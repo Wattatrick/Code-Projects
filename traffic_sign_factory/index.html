@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>Traffic Sign Factory</title>
+    <link rel="icon" href="res/favicon.svg" type="image/svg+xml">
+    <script src="res/jquery.js"></script>
+    <script src="res/rat.js"></script>
+    <script src="res/ratking.js"></script>
+    <script>
+
+    var numberOfGlyphs = 6;
+
+    function getRatkingSentence()
+    {
+      var nRatKing = rnd(0, ratKing.length);
+      return(ratKing[nRatKing]);
+    }
+
+    function getRatSentence()
+    {
+      var nRat = rnd(0, rats.length-1);
+      var sentence = rats[nRat];
+      var res = '';
+      Object.keys(sentence).forEach(function(key)
+      {
+       var word = rnd(0,sentence[key].length-1);
+       res = res + sentence[key][word]+' ';
+      })
+      return(res);
+    }
+
+
+
+
+    function rnd(min, max)
+    {
+     return(Math.floor(Math.random() * (max - min + 1) + min));
+    }
+
+    function pad(num, size)
+    {
+      num = num.toString();
+      while (num.length < size) num = "0" + num;
+      return(num);
+    }
+
+      setInterval(function(){
+        var randomBg = pad(rnd(1,5),2);
+        $('.bg').attr('src','res/road'+randomBg+'.jpg');
+        var randomSignBase = rnd(1,6);
+        var randomSign = pad(rnd(1,numberOfGlyphs),2);
+        var sentence = Math.floor(Math.random()*100);
+        if(sentence < 50)
+        {
+          $('.text').css('opacity',0);
+          //no sentence
+        }
+        if(sentence >= 50 && sentence < 80)
+        {
+          //random sentence
+          $('.text').css('opacity',1);
+          $('.text').html(getRatSentence());
+
+        }
+        if(sentence >= 80)
+        {
+          //rat-king sentence
+          $('.text').css('opacity',1);
+          $('.text').html(getRatkingSentence());
+        }
+
+
+        switch(randomSignBase)
+        {
+          case 1 :
+             $('.upper').css('background-image','url(res/prohibited_bg.svg)');
+             $('.sign-over').css('opacity','1');
+             $('.sign').css('background-image','url(res/b'+randomSign+'.svg)');
+          break;
+          case 2 :
+            $('.upper').css('background-image','url(res/stop.svg)');
+            $('.sign-over').css('opacity','0');
+            $('.sign').css('background-image','url(res/w'+randomSign+'.svg)');
+          break;
+          case 3 :
+            $('.upper').css('background-image','url(res/interstate.svg)');
+            $('.sign-over').css('opacity','0');
+            $('.sign').css('background-image','url(res/w'+randomSign+'.svg)');
+          break;
+          case 4 :
+            $('.upper').css('background-image','url(res/warning.svg)');
+            $('.sign-over').css('opacity','0');
+            $('.sign').css('background-image','url(res/b'+randomSign+'.svg)');
+          break;
+          case 5 :
+            $('.upper').css('background-image','url(res/prohibited_bg.svg)');
+            $('.sign-over').css('opacity','0');
+            $('.sign').css('background-image','url(res/b'+randomSign+'.svg)');
+          break;
+        }
+      },6000);
+    </script>
+    <style>
+      @font-face {
+          font-family: 'hw';
+          src: url('res/hw.woff2') format('woff2'),
+               url('res/hw.woff') format('woff');
+          font-weight: normal;
+          font-style: normal;
+      }
+      body{margin:0; padding:0; background:#000;}
+      img.bg{width:100%; height:100vh; display:block; object-fit:cover; filter: blur(20px);}
+      div.grid{position:absolute; top:0; bottom:0; left:0; right:0; display:grid; grid-template-rows:1fr 1fr;
+        grid-gap:20px; padding:20px;
+        animation-name:sign;
+        animation-duration:6s;
+        animation-iteration-count: infinite;
+      }
+      div.upper{background-image:url(res/prohibited_bg.svg);
+        position:relative;
+        background-repeat:no-repeat;
+        background-position:center center;
+        background-size:contain;}
+
+      div.sign{position:absolute; top:7vh; bottom:7vh;
+        aspect-ratio:1 / 1; left:50%; transform:translate(-50%,0);
+        background-repeat:no-repeat;
+        background-position:center center;
+        background-size:60%;
+        background-image:url(res/b01.svg);
+      }
+
+      div.sign-over{position:absolute; top:2vh; bottom:2vh;
+          aspect-ratio:1 / 1; left:50%; transform:translate(-50%,0);
+          background-image:url(res/prohibited_fg.svg);
+        }
+
+      div.lower div.text{font-family:'hw'; font-size:3vmin; background:#fff; max-width:14ch; padding:1em;
+        text-align:center; margin:0 auto; border:1vmin solid #000; border-radius:2vmin; outline:0.2vw solid #fff;
+      }
+
+      @keyframes sign{
+        0% {opacity:0; transform:scale(0.1);}
+        5% {opacity:0; transform:scale(0.1);}
+        15% {opacity:1;transform:scale(1);}
+        75% {opacity:1;transform:scale(1);}
+        80% {opacity:0;}
+        85% {opacity:0;transform:scale(5);}
+        100% {opacity:0;}
+      }
+
+      @keyframes curtain{
+        0% {opacity:1;}
+        10% {opacity:0;}
+        80% {opacity:0;}
+        90% {opacity:1;}
+        100% {opacity:1;}
+      }
+    div.curtain{position:absolute; left:0; right:0; bottom:0; top:0; background:#000;
+      animation-name:curtain;
+      animation-duration:6s;
+      animation-iteration-count: infinite;
+    }
+    </style>
+  </head>
+  <body>
+     <img class="bg" src="res/road01.jpg" alt="background">
+
+     <div class="grid">
+       <div class="upper">
+         <div class="sign"></div>
+         <div class="sign-over"></div>
+       </div>
+       <div class="lower">
+         <div class="text">No road is long with good company.</div>
+       </div>
+     </div>
+
+     <div class="curtain"></div>
+
+  <body>
+</html>
